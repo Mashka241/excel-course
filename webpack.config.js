@@ -8,6 +8,7 @@ const isProd = process.env.NODE_ENV === 'production'
 const isDev = !isProd
 
 const filename = ext => isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`
+
 const jsLoaders = () => {
   const loaders = [
     {
@@ -17,13 +18,13 @@ const jsLoaders = () => {
       }
     }
   ]
+
   if (isDev) {
     loaders.push('eslint-loader')
   }
+
   return loaders
 }
-
-console.log('isProd', isProd, isDev)
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -54,13 +55,12 @@ module.exports = {
         collapseWhitespace: isProd
       }
     }),
-    new CopyPlugin({
-      patterns: [
-        { 
-          from: path.resolve(__dirname, 'src/favicon.ico'),
-          to: path.resolve(__dirname, 'dist') }
-      ],
-    }),
+    new CopyPlugin([
+      {
+        from: path.resolve(__dirname, 'src/favicon.ico'),
+        to: path.resolve(__dirname, 'dist')
+      }
+    ]),
     new MiniCssExtractPlugin({
       filename: filename('css')
     })
@@ -78,7 +78,7 @@ module.exports = {
             }
           },
           'css-loader',
-          'sass-loader',
+          'sass-loader'
         ],
       },
       {
@@ -86,6 +86,6 @@ module.exports = {
         exclude: /node_modules/,
         use: jsLoaders()
       }
-    ],
+    ]
   }
 }
